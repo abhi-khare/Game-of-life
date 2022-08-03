@@ -63,9 +63,9 @@ class GameGrid:
         """
         This functions performs iteration based on the Rules of Convey's Game of life.
         To summarise:
-        1) If a cell is alive and it has less than 3 alive neighbours, it dies due to loneliness.
+        1) If a cell is alive and it has less than 2 alive neighbours, it dies due to loneliness.
         2) If a cell is alive and it has more than 3 alive neighbours, it dies due to over population.
-        3) If a cell is alive and it has exactly 3 alive neighbours, it continues to live.
+        3) If a cell is alive and it has 2 or 3 alive neighbours, it continues to live.
         4) If a cell is dead and it has exactly 3 alive neighbours, it becomes alive due to reproduction ;).
 
         More information at : https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
