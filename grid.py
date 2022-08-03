@@ -20,6 +20,10 @@ class GameGrid:
     def get_grid(self):
         return self.grid
 
+    def reset_grid(self):
+        self.grid = [[[0, 0] for x in range(self.grid_width)]
+                     for y in range(self.grid_height)]
+
     def get_neighbour_count(self, y_idx, x_idx):
         num_neighbour = 0
         if x_idx - 1 >= 0:
