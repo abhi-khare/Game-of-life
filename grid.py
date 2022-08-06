@@ -10,21 +10,22 @@ class GameGrid:
         self.grid_height = grid_height
         self.grid_width = grid_width
 
-    def set_cell(self, y_idx: int, x_idx: int, status: int, old: bool = True) -> None:
+    def set_cell(self, pos: list, status: int, old: bool = True) -> None:
         """
         This function sets the status of the cell (old/new)
-        :param y_idx: y index of the cell
-        :param x_idx: x index of the cell
+        :param pos: A list of tuple containing (y,x) index of the cell to be set
         :param status: Alive/Dead
         :param old: Whether to update old state or new state
         :return: None
         """
-        if old:
-            self.grid[y_idx][x_idx][0] = status
-        else:
-            self.grid[y_idx][x_idx][1] = status
 
-    def get_grid(self) -> None:
+        for (y_idx, x_idx) in pos:
+            if old:
+                self.grid[y_idx][x_idx][0] = status
+            else:
+                self.grid[y_idx][x_idx][1] = status
+
+    def get_grid(self) -> list:
         return self.grid
 
     def reset_grid(self) -> None:
@@ -77,14 +78,18 @@ class GameGrid:
                 if self.grid[y_idx][x_idx][0] == ALIVE:
                     num_neighbour = self.get_neighbour_count(y_idx, x_idx)
                     if num_neighbour < 2 or num_neighbour > 3:
-                        self.set_cell(y_idx, x_idx, DEAD, False)
+                        pos = [(y_idx, x_idx)]
+                        self.set_cell(pos, DEAD, False)
                     else:
-                        self.set_cell(y_idx, x_idx, ALIVE, False)
+                        pos = [(y_idx, x_idx)]
+                        self.set_cell(pos, ALIVE, False)
                 else:
                     num_neighbour = self.get_neighbour_count(y_idx, x_idx)
                     if num_neighbour == 3:
-                        self.set_cell(y_idx, x_idx, ALIVE, False)
+                        pos = [(y_idx, x_idx)]
+                        self.set_cell(pos, ALIVE, False)
 
         for y_idx in range(self.grid_height):
             for x_idx in range(self.grid_width):
-                self.set_cell(y_idx, x_idx, self.grid[y_idx][x_idx][1], True)
+                pos = [(y_idx, x_idx)]
+                self.set_cell(pos, self.grid[y_idx][x_idx][1], True)

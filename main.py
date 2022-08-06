@@ -1,12 +1,7 @@
-"""
-ToDos
-- improve variable and function name
-- add functionality to perform iteration 1 step at a time
-"""
-
 import pygame
 import sys
 from grid import GameGrid
+from configurations import set_pattern
 
 # params
 WINDOW_WIDTH, WINDOW_HEIGHT = 800, 800
@@ -64,41 +59,43 @@ def fill_grid(grid_arr: list) -> None:
     """
     for yidx, yval in enumerate(grid_arr):
         for xidx, xval in enumerate(yval):
-            fill_cell(yidx, xidx, grid_arr[yidx][xidx][1])
+            fill_cell(yidx, xidx, grid_arr[yidx][xidx][0])
 
 
 while True:
     clicked_pos = None
     # capturing events
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             sys.exit()
 
         if pygame.mouse.get_pressed()[0]:
             clicked_pos = pygame.mouse.get_pos()  # fetch mouse position if clicked
+            x_pix_cor, y_pix_cor = clicked_pos
+            y_idx, x_idx = int(y_pix_cor / BLOCKSIZE), int(x_pix_cor / BLOCKSIZE)
+            pos = [(y_idx, x_idx)]
+            grid.set_cell(pos, ALIVE)
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 grid.reset_grid()  # reset the backend grid
-                grid_arr = grid.get_grid()  # fetch the grid array
-                fill_grid(grid_arr)  # call the fill_grid function to wipe the grid
                 SIMULATION = False  # set simulation to False and allow setting cells
             if event.key == pygame.K_s:
                 SIMULATION = True  # This disables setting cells on the screen
             if event.key == pygame.K_d:
-                SIMULATION = False # This enables setting cells on the screen
-
-    if clicked_pos is not None and SIMULATION is False:
-        x_pos, y_pos = clicked_pos
-        # transform coordinates into array indices
-        y_idx, x_idx = int(y_pos / BLOCKSIZE), int(x_pos / BLOCKSIZE)
-        fill_cell(y_idx, x_idx, 1)
-        grid.set_cell(y_idx, x_idx, ALIVE)
+                SIMULATION = False  # This enables setting cells on the screen
+            if event.key == pygame.K_KP0:
+                grid = set_pattern(grid, 'glider')
+            if event.key == pygame.K_KP1:
+                grid = set_pattern(grid, 'pentomino')
 
     if SIMULATION:
         grid.run_iteration()
         grid_arr = grid.get_grid()
         fill_grid(grid_arr)
 
+    grid_arr = grid.get_grid()  # fetch the grid array
+    fill_grid(grid_arr)  # call the fill_grid function to wipe the grid
     draw_grid()
     pygame.display.update()
