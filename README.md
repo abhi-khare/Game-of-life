@@ -10,6 +10,9 @@ The rules of game are very simple : </br>
 
 The fascinating thing about the game is that even with such simple rules and only local interaction between the cells, we can see very complicated global behaviour. Sharing some gifs results from this implementation and few youTube links that shows more complex global behaviour.
 
+![](https://github.com/abhi-khare/Game-of-life/tree/main/resources/glider.gif)
+![](https://github.com/abhi-khare/Game-of-life/tree/main/resources/pentomino.gif)
+
 Life in life by Phillip Bradbury [ YT link](https://www.youtube.com/watch?v=xP5-iIeKXE8) </br>
 Epic conway's game of life by Rational Animations [YT link](https://www.youtube.com/watch?v=C2vgICfQawE)
 
