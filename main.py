@@ -1,38 +1,31 @@
+"""
+TODO:
+better code for handling list and indexes
+"""
+
 import pygame
 import sys
 from grid import GameGrid
 from configurations import set_pattern
+from arguments import arguments
 
-# params
-WINDOW_WIDTH, WINDOW_HEIGHT = 800, 800
+# arguments and definitions
+args = arguments()
+WINDOW_WIDTH, WINDOW_HEIGHT = args.ww, args.wh
+BLOCKSIZE = args.bs
 BLACK = (0, 0, 0)
+WHITE = (250, 250, 250)
 GREY = (100, 100, 100)
 GREEN = (34, 200, 34)
 SIMULATION = False
-BLOCKSIZE = 10
 ALIVE, DEAD = 1, 0
 
 # Pygame initialisation
 pygame.init()
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 SCREEN.fill(BLACK)
-
-# grid object
-grid = GameGrid(grid_height=int(WINDOW_HEIGHT / BLOCKSIZE),
-                grid_width=int(WINDOW_WIDTH / BLOCKSIZE))
-
-
-def draw_grid() -> None:
-    """
-    This function draws grid on the screen by drawing rectangle of
-    size - BLOCKSIZE in sequence. This can be improved by drawing parallel
-    lines.[ToDo]
-    :return: None
-    """
-    for x in range(0, WINDOW_WIDTH, BLOCKSIZE):
-        for y in range(0, WINDOW_HEIGHT, BLOCKSIZE):
-            rect = pygame.Rect(x, y, BLOCKSIZE, BLOCKSIZE)
-            pygame.draw.rect(SCREEN, GREY, rect, 1)
+FPS = args.fps  # frames per second setting
+fpsClock = pygame.time.Clock()
 
 
 def fill_cell(yidx: int, xidx: int, status: int) -> None:
@@ -50,20 +43,36 @@ def fill_cell(yidx: int, xidx: int, status: int) -> None:
         pygame.draw.rect(SCREEN, BLACK, rect, width=0)
 
 
-def fill_grid(grid_arr: list) -> None:
+def fill_grid(grid_array: list) -> None:
     """
     This function loops through the grid_arr and call the fill_Cell
     function to fill individual cell on screen
-    :param grid_arr: List of list containing a tuple that stores backend grid information
+    :param grid_array: List of list containing a tuple that stores backend grid information
     :return: None
     """
-    for yidx, yval in enumerate(grid_arr):
-        for xidx, xval in enumerate(yval):
-            fill_cell(yidx, xidx, grid_arr[yidx][xidx][0])
+    for yidx, row in enumerate(grid_array):
+        for xidx, col in enumerate(row):
+            fill_cell(yidx, xidx, grid_array[yidx][xidx][0])
 
+
+def draw_grid(grid_array) -> None:
+    """
+    This function draws grid on the screen by drawing rectangle of
+    size - BLOCKSIZE in sequence.
+    :return: None
+    """
+    fill_grid(grid_array)
+    for x in range(0, WINDOW_WIDTH, BLOCKSIZE):
+        for y in range(0, WINDOW_HEIGHT, BLOCKSIZE):
+            rect = pygame.Rect(x, y, BLOCKSIZE, BLOCKSIZE)
+            pygame.draw.rect(SCREEN, GREY, rect, width=1)
+
+
+# grid object
+grid = GameGrid(grid_height=int(WINDOW_HEIGHT / BLOCKSIZE),
+                grid_width=int(WINDOW_WIDTH / BLOCKSIZE))
 
 while True:
-    clicked_pos = None
     # capturing events
     for event in pygame.event.get():
 
@@ -71,8 +80,7 @@ while True:
             sys.exit()
 
         if pygame.mouse.get_pressed()[0]:
-            clicked_pos = pygame.mouse.get_pos()  # fetch mouse position if clicked
-            x_pix_cor, y_pix_cor = clicked_pos
+            x_pix_cor, y_pix_cor = pygame.mouse.get_pos()  # fetch mouse position if clicked
             y_idx, x_idx = int(y_pix_cor / BLOCKSIZE), int(x_pix_cor / BLOCKSIZE)
             pos = [(y_idx, x_idx)]
             grid.set_cell(pos, ALIVE)
@@ -92,10 +100,8 @@ while True:
 
     if SIMULATION:
         grid.run_iteration()
-        grid_arr = grid.get_grid()
-        fill_grid(grid_arr)
 
     grid_arr = grid.get_grid()  # fetch the grid array
-    fill_grid(grid_arr)  # call the fill_grid function to wipe the grid
-    draw_grid()
+    draw_grid(grid_arr)
     pygame.display.update()
+    fpsClock.tick(FPS)
