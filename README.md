@@ -8,7 +8,10 @@ The rules of game are very simple : </br>
 * If a cell is alive and surrounded by either 2 or 3 alive cell, it continues to live.
 * If a cell is dead and surrounded by exactly 3 alive cell, it borns again.
 
+The fascinating thing about the game is that even with such simple rules and only local interaction between the cells, we can see very complicated global behaviour. Sharing some gifs results from this implementation and few youTube links that shows more complex global behaviour.
 
+Life in life by Phillip Bradbury [ YT link](https://www.youtube.com/watch?v=xP5-iIeKXE8) </br>
+Epic conway's game of life by Rational Animations [YT link](https://www.youtube.com/watch?v=C2vgICfQawE)
 
 <h1>Runbook</h1> <br />
 
